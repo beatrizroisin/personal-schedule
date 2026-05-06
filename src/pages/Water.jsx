@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useUserStorage } from '../hooks/useStorage';
 import './Water.scss';
 
@@ -39,12 +39,17 @@ const Water = ({ username }) => {
   const [notifEnabled, setNotifEnabled] = useUserStorage('water_notif', false, username);
   const [lastDrinkTime, setLastDrinkTime] = useUserStorage('water_last_drink', null, username);
 
+  // Refs so the interval can always read latest values without being a dependency
+  const lastDrinkRef = useRef(lastDrinkTime);
+  const setLastDrinkRef = useRef(setLastDrinkTime);
+  useEffect(() => { lastDrinkRef.current = lastDrinkTime; }, [lastDrinkTime]);
+  useEffect(() => { setLastDrinkRef.current = setLastDrinkTime; }, [setLastDrinkTime]);
+
   const todayKey = getTodayKey();
   const todayEntries = waterData[todayKey]?.entries || [];
   const todayTotal = todayEntries.reduce((sum, e) => sum + e.amount, 0);
   const percentage = Math.min((todayTotal / goal) * 100, 100);
 
-  // Cups representation (each cup = 250ml)
   const totalCups = Math.ceil(goal / 250);
   const filledCups = Math.floor(todayTotal / 250);
 
@@ -71,7 +76,6 @@ const Water = ({ username }) => {
     if (g >= 500 && g <= 5000) { setGoal(g); setEditingGoal(false); }
   };
 
-  // Notification permission
   const requestNotif = async () => {
     if (!('Notification' in window)) {
       alert('Seu navegador não suporta notificações 😢');
@@ -94,13 +98,13 @@ const Water = ({ username }) => {
   };
 
   // Check every minute if 1hr has passed without drinking
+  // Uses refs so interval doesn't need lastDrinkTime as dependency
   useEffect(() => {
     if (!notifEnabled || notifPermission !== 'granted') return;
     const interval = setInterval(() => {
-      const last = lastDrinkTime ? new Date(lastDrinkTime) : null;
+      const last = lastDrinkRef.current ? new Date(lastDrinkRef.current) : null;
       const now = new Date();
-      const diffMs = last ? now - last : Infinity;
-      const diffMin = diffMs / 60000;
+      const diffMin = last ? (now - last) / 60000 : Infinity;
       if (diffMin >= 60) {
         new Notification('💧 Hora de beber água!', {
           body: 'Você não bebe água há mais de 1 hora. Beba um copo agora! 🌸',
@@ -108,21 +112,19 @@ const Water = ({ username }) => {
           tag: 'water-reminder',
           requireInteraction: true,
         });
-        // Reset timer to avoid spam (only notify once per hour)
-        setLastDrinkTime(now.toISOString());
+        setLastDrinkRef.current(now.toISOString());
       }
-    }, 60000); // Check every minute
+    }, 60000);
     return () => clearInterval(interval);
-  }, [notifEnabled, notifPermission, lastDrinkTime]);
+  }, [notifEnabled, notifPermission]);
 
-  // Weekly data
   const weekKeys = getWeekKeys();
-  const weekData = weekKeys.map(({ key, label, date }) => {
+  const weekData = weekKeys.map(({ key, label }) => {
     const entries = waterData[key]?.entries || [];
     const total = entries.reduce((s, e) => s + e.amount, 0);
     const pct = Math.min((total / goal) * 100, 100);
     const isToday = key === todayKey;
-    return { key, label, total, pct, isToday, date };
+    return { key, label, total, pct, isToday };
   });
 
   const weekAvg = Math.round(
@@ -164,7 +166,6 @@ const Water = ({ username }) => {
         <p>Cuide do seu corpinho! 🌸</p>
       </div>
 
-      {/* Meta do dia */}
       <div className="water-hero card fade-in" style={{ background: `linear-gradient(135deg, ${getStatusColor()}, rgba(255,255,255,0.6))` }}>
         <div className="wh-left">
           <div className="wh-emoji-big">{status.emoji}</div>
@@ -196,7 +197,6 @@ const Water = ({ username }) => {
         </div>
       </div>
 
-      {/* Editar meta */}
       {editingGoal && (
         <div className="card fade-in goal-edit-form">
           <h4>🎯 Definir Meta Diária</h4>
@@ -216,7 +216,6 @@ const Water = ({ username }) => {
         </div>
       )}
 
-      {/* Copos visuais */}
       <div className="card fade-in cups-section">
         <div className="card-header">
           <h3>🥤 Copos (250ml cada)</h3>
@@ -231,7 +230,6 @@ const Water = ({ username }) => {
         </div>
       </div>
 
-      {/* Adicionar água */}
       <div className="card fade-in add-water-section">
         <div className="card-header">
           <h3>➕ Adicionar Água</h3>
@@ -258,7 +256,6 @@ const Water = ({ username }) => {
         </div>
       </div>
 
-      {/* Histórico do dia */}
       {todayEntries.length > 0 && (
         <div className="card fade-in history-section">
           <div className="card-header">
@@ -278,7 +275,6 @@ const Water = ({ username }) => {
         </div>
       )}
 
-      {/* Notificações */}
       <div className="card fade-in notif-section">
         <div className="card-header">
           <h3>🔔 Lembrete de Hidratação</h3>
@@ -313,7 +309,6 @@ const Water = ({ username }) => {
         </div>
       </div>
 
-      {/* Relatório semanal */}
       <div className="card fade-in weekly-water">
         <div className="card-header">
           <h3>📊 Relatório Semanal</h3>
