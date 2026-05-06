@@ -1,0 +1,214 @@
+// ===== VARIÁVEIS GLOBAIS =====
+$pink-soft: #fce4ec;
+$pink-light: #f8bbd9;
+$pink-medium: #f48fb1;
+$pink-primary: #e91e8c;
+$lavender: #e8d5f5;
+$lavender-medium: #ce93d8;
+$mint: #d4f5e9;
+$mint-medium: #80cbc4;
+$peach: #ffe8d6;
+$peach-medium: #ffb74d;
+$sky: #dbeafe;
+$sky-medium: #90caf9;
+$yellow-soft: #fff9c4;
+$white: #ffffff;
+$text-dark: #5a4a6a;
+$text-medium: #8b7da0;
+$text-light: #b8a9c9;
+$border-soft: rgba(232, 213, 245, 0.6);
+$shadow-soft: 0 4px 20px rgba(200, 150, 220, 0.15);
+$shadow-medium: 0 8px 30px rgba(200, 150, 220, 0.25);
+$shadow-card: 0 2px 15px rgba(180, 130, 210, 0.12);
+$radius-small: 12px;
+$radius-medium: 18px;
+$radius-large: 24px;
+$radius-pill: 50px;
+
+// ===== RESET E BASE =====
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #fce4ec 0%, #e8d5f5 30%, #dbeafe 60%, #d4f5e9 100%);
+  background-attachment: fixed;
+  color: $text-dark;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+// ===== SCROLLBAR FOFA =====
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: $pink-soft;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: $pink-medium;
+  border-radius: 10px;
+  &:hover {
+    background: $pink-primary;
+  }
+}
+
+// ===== UTILITÁRIOS =====
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid $border-soft;
+  border-radius: $radius-large;
+  box-shadow: $shadow-card;
+}
+
+.btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background: linear-gradient(135deg, $pink-medium, $lavender-medium);
+  color: $white;
+  padding: 10px 20px;
+  border-radius: $radius-pill;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(244, 143, 177, 0.4);
+  
+  &:hover {
+    box-shadow: 0 6px 20px rgba(244, 143, 177, 0.5);
+  }
+}
+
+.btn-soft {
+  @extend .btn;
+  background: rgba(255,255,255,0.8);
+  color: $text-dark;
+  padding: 8px 16px;
+  border-radius: $radius-pill;
+  font-size: 0.85rem;
+  border: 1.5px solid $border-soft;
+  
+  &:hover {
+    background: $pink-soft;
+    border-color: $pink-medium;
+  }
+}
+
+.btn-danger {
+  @extend .btn;
+  background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+  color: #c62828;
+  padding: 6px 14px;
+  border-radius: $radius-pill;
+  font-size: 0.8rem;
+}
+
+.input-soft {
+  font-family: 'Nunito', sans-serif;
+  background: rgba(255,255,255,0.9);
+  border: 1.5px solid $border-soft;
+  border-radius: $radius-medium;
+  padding: 10px 16px;
+  color: $text-dark;
+  font-size: 0.9rem;
+  width: 100%;
+  transition: all 0.2s ease;
+  outline: none;
+  
+  &:focus {
+    border-color: $pink-medium;
+    box-shadow: 0 0 0 3px rgba(244, 143, 177, 0.2);
+  }
+  
+  &::placeholder {
+    color: $text-light;
+  }
+}
+
+textarea.input-soft {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// ===== FLOATING DECORATIONS =====
+.floating-deco {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  font-size: 2.5rem;
+  animation: floatAround 8s ease-in-out infinite;
+  
+  @keyframes floatAround {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-15px) rotate(5deg); }
+    66% { transform: translateY(-8px) rotate(-3deg); }
+  }
+}
+
+// ===== ANIMAÇÕES =====
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.fade-in {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+// ===== TAG CHIPS =====
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+  font-size: 0.78rem;
+  font-weight: 600;
+  
+  &.chip-pink { background: $pink-light; color: darken($pink-primary, 10%); }
+  &.chip-lavender { background: $lavender; color: darken($lavender-medium, 20%); }
+  &.chip-mint { background: $mint; color: darken($mint-medium, 20%); }
+  &.chip-peach { background: $peach; color: darken($peach-medium, 25%); }
+  &.chip-sky { background: $sky; color: darken($sky-medium, 30%); }
+}
