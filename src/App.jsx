@@ -148,7 +148,7 @@ const App = () => {
 
   const today    = new Date();
   const dateStr  = today.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' });
-  const pageName = ALL_NAV.find(n => n.id === page)?.label || 'Início';
+
 
   // ── MOBILE LAYOUT ─────────────────────────────────────────────
   if (isMobile) {

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './Calendar.scss';
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
 const DAYS_SHORT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const HOURS = Array.from({ length: 24 }, (_, i) => i); // 0..23
 
@@ -89,7 +89,6 @@ const Calendar = ({ username }) => {
   const [view, setView] = useState('week'); // 'week' | 'day' | 'month'
   const [selectedDay, setSelectedDay] = useState(today);
   const [showForm, setShowForm] = useState(false);
-  const [formDate, setFormDate] = useState('');
   const [form, setForm] = useState({
     title: '', description: '', date: '', time: '', timeEnd: '',
     category: 'pessoal', priority: 'media'

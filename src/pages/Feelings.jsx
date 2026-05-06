@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useUserStorage } from '../hooks/useStorage';
 import { EMOTIONS, getTodayKey, getWeekDates } from '../data';
 import './Feelings.scss';

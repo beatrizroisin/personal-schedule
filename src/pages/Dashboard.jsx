@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { getDailyPhrase, EMOTIONS, getTodayKey, formatDateLong } from '../data';
 import { useUserStorage } from '../hooks/useStorage';
 import './Dashboard.scss';
 
 const Dashboard = ({ username }) => {
   const [emotions, setEmotions] = useUserStorage('emotions', {}, username);
-  const [tasks, setTasks] = useUserStorage('tasks', [], username);
-  const [goals, setGoals] = useUserStorage('goals', [], username);
+  const [tasks] = useUserStorage('tasks', [], username);
+  const [goals] = useUserStorage('goals', [], username);
   const todayKey = getTodayKey();
   const todayEmotions = emotions[todayKey] || [];
   const phrase = getDailyPhrase();
